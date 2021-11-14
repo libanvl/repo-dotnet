@@ -6,8 +6,11 @@
 
 A null-free optional value library for .NET.
 
-* Present values are represented as an Opt&lt;T&gt;.Some
-* Missing values are represented as Opt&lt;T&gt;.None
+* An optional value is represented as the base type Opt&lt;T&gt;
+* Present values are represented as the derived type Opt&lt;T&gt;.Some
+* Missing values are represented as the static property Opt&lt;T&gt;.None
+
+See the [Examples Tests](test/libanvl.Opt.Test/Examples.cs) for more on how to use Opt.
 
 ## Requirements
 
