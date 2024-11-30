@@ -11,7 +11,7 @@ on:
       dotnet-version:
         description: The dotnet version specifier
         type: string
-        default: 6.0.x
+        default: 6.x.x
         required: false
       dotnet-include-prerelease:
         description: Whether to include dotnet prerelease version

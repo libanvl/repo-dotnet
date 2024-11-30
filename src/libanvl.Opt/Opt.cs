@@ -46,7 +46,9 @@ public abstract record Opt<T>() : OptBase(typeof(T)), IOpt<T>
     /// <summary>
     /// The single instance of None for <typeparamref name="T"/>.
     /// </summary>
+#pragma warning disable CA1000 // Do not declare static members on generic types
     public static Opt<T> None { get; } = new NoneImpl();
+#pragma warning restore CA1000 // Do not declare static members on generic types
 
     /// <inheritdoc />
     public bool IsNone => !IsSome;

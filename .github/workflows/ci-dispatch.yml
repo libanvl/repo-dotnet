@@ -9,12 +9,12 @@ on:
         required: false
       dotnet-version:
         description: The dotnet version specifier
-        default: 6.0.x
+        default: 8.x.x
         required: false
       dotnet-include-prerelease:
         type: boolean
         description: Include dotnet prerelease versions
-        default: 'true'
+        default: true
         required: false
       dotnet-verbosity:
         type: string
@@ -29,12 +29,12 @@ on:
         description: Pack and upload as an artifact
         type: boolean
         required: false
-        default: 'false'
+        default: false
       workflow-print-context:
         description: Print the github context as a step
         type: boolean
         required: false
-        default: 'false'
+        default: false
 
 jobs:
   print-context:

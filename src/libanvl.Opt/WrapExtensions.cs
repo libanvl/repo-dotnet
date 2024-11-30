@@ -14,7 +14,7 @@ public static class WrapExtensions
     public static Opt<T> WrapOpt<T>(this T? value) => value is null ? Opt.None<T>() : Opt.Some(value);
 
     /// <summary>
-    /// Project <paramref name="value"/> to a new value and wrap in an appropirate <see cref="Opt{U}"/>.
+    /// Project <paramref name="value"/> to a new value and wrap in an appropriate <see cref="Opt{U}"/>.
     /// </summary>
     /// <typeparam name="T">The original type</typeparam>
     /// <typeparam name="U">The projected type</typeparam>
@@ -36,7 +36,7 @@ public static class WrapExtensions
     }
 
     /// <summary>
-    /// Wrap an IEnumerable in an appropirate <see cref="IEnumerable{T}"/>.
+    /// Wrap an IEnumerable in an appropriate <see cref="IEnumerable{T}"/>.
     /// </summary>
     /// <typeparam name="T">The collection type</typeparam>
     /// <param name="value">The enumerable to warp</param>
