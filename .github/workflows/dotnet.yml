@@ -21,24 +21,24 @@ env:
 
 jobs:
   build-ubuntu:
-    uses: libanvl/uuid/.github/workflows/ci-call.yml@main
+    uses: ./.github/workflows/ci-call.yml
     with:
       runs-on: ubuntu-latest
       dotnet-version: 8.x.x
-      dotnet-include-prerelease: true
+      dotnet-include-prerelease: false
       package: true
   build-windows:
-    uses: libanvl/uuid/.github/workflows/ci-call.yml@main
+    uses: ./.github/workflows/ci-call.yml
     with:
       runs-on: ubuntu-latest
       dotnet-version: 8.x.x
-      dotnet-include-prerelease: true
+      dotnet-include-prerelease: false
   build-macos:
-    uses: libanvl/uuid/.github/workflows/ci-call.yml@main
+    uses: ./.github/workflows/ci-call.yml
     with:
       runs-on: ubuntu-latest
       dotnet-version: 8.x.x
-      dotnet-include-prerelease: true
+      dotnet-include-prerelease: false
 
   private-release:
     needs: build-ubuntu
