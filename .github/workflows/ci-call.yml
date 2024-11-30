@@ -75,7 +75,7 @@ jobs:
         run: echo ${{ steps.nbgv.outputs.NuGetPackageVersion }} > ./nupkg/version.txt
       - name: Upload Artifact
         if: ${{ inputs.package }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: nupkg
           path: ./nupkg/*
