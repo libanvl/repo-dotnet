@@ -11,7 +11,7 @@ on:
       dotnet-version:
         description: The dotnet version specifier
         type: string
-        default: 6.x.x
+        default: 8.x.x
         required: false
       dotnet-include-prerelease:
         description: Whether to include dotnet prerelease version
@@ -45,16 +45,16 @@ jobs:
       tag-name: v${{ steps.nbgv.outputs.NuGetPackageVersion }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
           include-prerelease: ${{ inputs.dotnet-include-prerelease }}
       - name: Nerdbank.GitVersioning
-        uses: dotnet/nbgv@v0.4.0
+        uses: dotnet/nbgv@v0.4.2
         with:
           setCommonVars: true
         id: nbgv
