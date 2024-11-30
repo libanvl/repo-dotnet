@@ -1,4 +1,4 @@
-name: .NET 6
+name: .NET 8
 
 on:
   push:
@@ -24,20 +24,20 @@ jobs:
     uses: libanvl/uuid/.github/workflows/ci-call.yml@main
     with:
       runs-on: ubuntu-latest
-      dotnet-version: 6.0.x
+      dotnet-version: 8.x.x
       dotnet-include-prerelease: true
       package: true
   build-windows:
     uses: libanvl/uuid/.github/workflows/ci-call.yml@main
     with:
       runs-on: ubuntu-latest
-      dotnet-version: 6.0.x
+      dotnet-version: 8.x.x
       dotnet-include-prerelease: true
   build-macos:
     uses: libanvl/uuid/.github/workflows/ci-call.yml@main
     with:
       runs-on: ubuntu-latest
-      dotnet-version: 6.0.x
+      dotnet-version: 8.x.x
       dotnet-include-prerelease: true
 
   private-release:
