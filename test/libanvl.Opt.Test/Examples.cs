@@ -10,7 +10,7 @@ public class Examples
     [Fact]
     public void WrapOpt()
     {
-        static Opt<T> GetOpt<T>(T? person) => person.WrapOpt();
+        static XOpt<T> GetOpt<T>(T? person) => person.WrapOpt();
 
         var rick = new Person("Rick", "Sanchez", Org.Alpha);
         var morty = new Person("Mortimer", "Smith", Org.Gamma);
@@ -19,7 +19,7 @@ public class Examples
         Assert.True(optPerson.IsSome);
         var person = optPerson.Unwrap();
 
-        if (optPerson is Opt<Person>.Some somePerson)
+        if (optPerson is XOpt<Person>.Some somePerson)
         {
             Assert.Same(person, somePerson.Value);
         }
@@ -33,7 +33,7 @@ public class Examples
         Assert.Same(morty, optPerson.SomeOrDefault(morty));
         Assert.Null(optPerson.SomeOrNull());
 
-        static bool AcceptOpt(Opt<Person> op) => op.IsSome;
+        static bool AcceptOpt(XOpt<Person> op) => op.IsSome;
 
         // implicit conversion
         var result = AcceptOpt(rick);
@@ -51,16 +51,16 @@ public class Examples
         // result = AcceptOpt(null);
 
         // explicit None
-        result = AcceptOpt(Opt<Person>.None);
+        result = AcceptOpt(XOpt<Person>.None);
         Assert.False(result);
     }
 
     [Fact]
     public void WrapOptAndProject()
     {
-        static Opt<DirectoryInfo> GetOptDirectoryInfo(string? path) => path.WrapOpt(p => new DirectoryInfo(p));
+        static XOpt<DirectoryInfo> GetOptDirectoryInfo(string? path) => path.WrapOpt(p => new DirectoryInfo(p));
 
-        Opt<DirectoryInfo> optDirectoryInfo = GetOptDirectoryInfo(@"C:\Users");
+        XOpt<DirectoryInfo> optDirectoryInfo = GetOptDirectoryInfo(@"C:\Users");
         Assert.True(optDirectoryInfo.IsSome);
 
         optDirectoryInfo = GetOptDirectoryInfo(null);
@@ -75,10 +75,10 @@ public class Examples
 
         var optBook = new Book("How to drive a space car", rick, morty).WrapOpt();
 
-        Opt<string> optEditorLastName = optBook.Select(b => b.Editor.LastName);
+        XOpt<string> optEditorLastName = optBook.Select(b => b.Editor.LastName);
         Assert.Equal(morty.LastName, optEditorLastName.Unwrap());
 
-        optBook = Opt<Book>.None;
+        optBook = XOpt<Book>.None;
         optEditorLastName = optBook.Select(b => b.Editor.LastName);
         Assert.True(optEditorLastName.IsNone);
     }
@@ -101,7 +101,7 @@ public class Examples
             Assert.Same(b.Editor, morty);
         }
 
-        library = new Library(Opt<IEnumerable<Book>>.None, Opt<Person>.None);
+        library = new Library(XOpt<IEnumerable<Book>>.None, XOpt<Person>.None);
         
         // Books will be an empty collection
         foreach (Book b in library.Books)
@@ -114,14 +114,14 @@ public class Examples
     public void CastThroughOpt()
     {
         // implicit conversion to Opt
-        Opt<DeltaPerson> optJerry = new DeltaPerson("Jerry", "Smith");
-        Opt<Person> optPerson = optJerry.Cast<Person>();
+        XOpt<DeltaPerson> optJerry = new DeltaPerson("Jerry", "Smith");
+        XOpt<Person> optPerson = optJerry.Cast<Person>();
 
         Assert.Same(optJerry.Unwrap(), optPerson.Unwrap());
 
         // variance is supported through the IOpt<T> interface
         // but functionality is limited and IOpt<T> cannot be returned
         // from a function.
-        IOpt<Person> optVariantPerson = optJerry;
+        IXOpt<Person> optVariantPerson = optJerry;
     }
 }

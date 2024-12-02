@@ -20,4 +20,4 @@ internal record DeltaPerson(string FirstName, string LastName) : Person(FirstNam
 
 internal record Book(string Title, Person Author, Person Editor);
 
-internal record Library(Opt<IEnumerable<Book>> Books, Opt<Person> Curator);
+internal record Library(XOpt<IEnumerable<Book>> Books, XOpt<Person> Curator);
