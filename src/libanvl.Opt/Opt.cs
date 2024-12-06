@@ -24,20 +24,37 @@ public static class Opt
     public static Opt<T> Some<T>(T value) where T : notnull => Opt<T>.Some(value);
 
     /// <summary>
-    /// Creates an <see cref="Opt{T}"/> from another <see cref="Opt{T}"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the value.</typeparam>
-    /// <param name="value">The option to wrap.</param>
-    /// <returns>An <see cref="Opt{T}"/> containing the value if present, otherwise throws an exception.</returns>
-    public static Opt<T> Some<T>(Opt<T> value) where T : notnull => Opt<T>.Some(value);
-
-    /// <summary>
     /// Creates an <see cref="Opt{T}"/> from a nullable value.
     /// </summary>
     /// <typeparam name="T">The type of the value.</typeparam>
     /// <param name="value">The nullable value to wrap.</param>
     /// <returns>An <see cref="Opt{T}"/> containing the value if not null, otherwise <see cref="Opt{T}.None"/>.</returns>
     public static Opt<T> From<T>(T? value) where T : notnull => Opt<T>.From(value);
+
+    /// <summary>
+    /// Combines two options into an option containing a tuple of their values if both are present.
+    /// </summary>
+    /// <typeparam name="T">The type of the first value.</typeparam>
+    /// <typeparam name="U">The type of the second value.</typeparam>
+    /// <param name="opt1">The first option.</param>
+    /// <param name="opt2">The second option.</param>
+    /// <returns>An option containing a tuple of the values if both are present, otherwise none.</returns>
+    public static Opt<(T, U)> Zip<T, U>(Opt<T> opt1, Opt<U> opt2)
+        where T : notnull
+        where U : notnull
+    {
+        return opt1.IsSome && opt2.IsSome
+            ? Opt<(T, U)>.Some((opt1.Unwrap(), opt2.Unwrap()))
+            : Opt<(T, U)>.None;
+    }
+
+    /// <summary>
+    /// Flattens an <see cref="Opt{Opt}"/> to an <see cref="Opt{T}"/>.
+    /// </summary>
+    /// <param name="opt">The option to flatten.</param>
+    /// <returns>The flattened option.</returns>
+    public static Opt<T> Flatten<T>(Opt<Opt<T>> opt)
+        where T : notnull => opt.IsSome ? opt.Unwrap() : Opt<T>.None;
 }
 
 /// <summary>
@@ -65,15 +82,6 @@ public readonly struct Opt<T> : IEquatable<Opt<T>> where T : notnull
     /// <param name="value">The value to wrap.</param>
     /// <returns>An <see cref="Opt{T}"/> containing the value.</returns>
     public static Opt<T> Some(T value) => new(value);
-
-    /// <summary>
-    /// Creates an <see cref="Opt{T}"/> from another <see cref="Opt{T}"/>.
-    /// </summary>
-    /// <param name="value">The option to wrap.</param>
-    /// <returns>An <see cref="Opt{T}"/> containing the value if present, otherwise throws an exception.</returns>
-    public static Opt<T> Some(Opt<T> value) => value.IsSome
-        ? value
-        : OptException.ThrowOptIsNoneIfNull(value._value);
 
     /// <summary>
     /// Creates an <see cref="Opt{T}"/> from a nullable value.
@@ -113,6 +121,9 @@ public readonly struct Opt<T> : IEquatable<Opt<T>> where T : notnull
     /// <inheritdoc/>
     public static implicit operator T?(Opt<T> option) => option.IsSome ? option.Unwrap() : default;
 
+    /// <inheritdoc/>
+    public static implicit operator Opt<T>(Opt<Opt<T>> option) => Opt.Flatten(option);
+
     /// <summary>
     /// Deconstructs the <see cref="Opt{T}"/> into its value and a boolean indicating if it has a value.
     /// </summary>
@@ -142,13 +153,13 @@ public readonly struct Opt<T> : IEquatable<Opt<T>> where T : notnull
     public T Unwrap() => OptException.ThrowOptIsNoneIfNull(_value);
 
     /// <summary>
-    /// Returns the value if present, otherwise returns the specified default value.
+    /// Returns the value if present, otherwise returns the specified fallback value.
     /// </summary>
-    /// <param name="defaultValue">The default value to return if the value is not present.</param>
+    /// <param name="fallback">The fallback value to return if the value is not present.</param>
     /// <returns>The value or the default value.</returns>
-    public T SomeOr(T defaultValue) => IsSome
+    public T SomeOr(T fallback) => IsSome
         ? OptException.ThrowInternalErrorIfNull(_value)
-        : defaultValue;
+        : fallback;
 
     /// <summary>
     /// Returns the value if present, otherwise returns the result of the specified function.
@@ -158,6 +169,12 @@ public readonly struct Opt<T> : IEquatable<Opt<T>> where T : notnull
     public T SomeOr(Func<T> fn) => IsSome
         ? OptException.ThrowInternalErrorIfNull(_value)
         : fn();
+
+    /// <summary>
+    /// Returns the value if present, otherwise returns default value of <typeparamref name="T"/>.
+    /// </summary>
+    /// <returns>The value or <see langword="default"/>.</returns>
+    public T? SomeOrDefault() => IsSome ? _value : default;
 
     /// <summary>
     /// Invokes one of the specified actions depending on whether the value is present.
@@ -194,25 +211,13 @@ public readonly struct Opt<T> : IEquatable<Opt<T>> where T : notnull
         : Opt<U>.None;
 
     /// <summary>
-    /// Flattens an <see cref="Opt{Opt}"/> to an <see cref="Opt{T}"/>.
+    /// Casts the value to the specified type if present.
     /// </summary>
-    /// <param name="opt">The option to flatten.</param>
-    /// <returns>The flattened option.</returns>
-    public static Opt<T> Flatten(Opt<Opt<T>> opt) => opt.IsSome ? opt.Unwrap() : None;
-
-    /// <summary>
-    /// Combines two options into an option containing a tuple of their values if both are present.
-    /// </summary>
-    /// <typeparam name="U">The type of the second value.</typeparam>
-    /// <param name="opt1">The first option.</param>
-    /// <param name="opt2">The second option.</param>
-    /// <returns>An option containing a tuple of the values if both are present, otherwise none.</returns>
-    public static Opt<(T, U)> Zip<U>(Opt<T> opt1, Opt<U> opt2) where U : notnull
-    {
-        return opt1.IsSome && opt2.IsSome
-            ? Opt<(T, U)>.Some((opt1.Unwrap(), opt2.Unwrap()))
-            : Opt<(T, U)>.None;
-    }
+    /// <typeparam name="U">The type to cast to.</typeparam>
+    /// <returns>An <see cref="Opt{U}"/> containing the casted value or none.</returns>
+    public Opt<U> Cast<U>() where U : notnull => OptException.ThrowInternalErrorIfNull(_value) is U casted
+        ? Opt<U>.Some(casted)
+        : Opt<U>.None;
 
     /// <inheritdoc/>
     public bool Equals(Opt<T> other) => Equals(other, EqualityComparer<T>.Default);

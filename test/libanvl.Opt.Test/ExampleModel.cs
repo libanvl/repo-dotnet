@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace libanvl.Test;
 
@@ -20,4 +16,4 @@ internal record DeltaPerson(string FirstName, string LastName) : Person(FirstNam
 
 internal record Book(string Title, Person Author, Person Editor);
 
-internal record Library(XOpt<IEnumerable<Book>> Books, XOpt<Person> Curator);
+internal record Library(Opt<IEnumerable<Book>> Books, Opt<Person> Curator);

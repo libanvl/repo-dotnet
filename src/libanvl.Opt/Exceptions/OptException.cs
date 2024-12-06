@@ -41,10 +41,7 @@ public class OptException(OptException.OptExceptionCode code)
     /// <exception cref="OptException">Thrown when the value is null.</exception>
     public static void ThrowIfNull<T>(T? value)
     {
-        if (value is null)
-        {
-            throw new OptException(OptExceptionCode.InitializedWithNull);
-        }
+        _ = value ?? throw new OptException(OptExceptionCode.InitializedWithNull);
     }
 
     /// <summary>
@@ -56,7 +53,7 @@ public class OptException(OptException.OptExceptionCode code)
     /// <exception cref="OptException">Thrown when the value is null.</exception>
     public static T ThrowInternalErrorIfNull<T>(T? value)
     {
-        return value is null ? throw new OptException(OptExceptionCode.InternalError) : value;
+        return value ?? throw new OptException(OptExceptionCode.InternalError);
     }
 
     /// <summary>
@@ -68,12 +65,7 @@ public class OptException(OptException.OptExceptionCode code)
     /// <exception cref="OptException">Thrown when the value is null.</exception>
     public static T ThrowOptIsNoneIfNull<T>(T? value)
     {
-        if (value is null)
-        {
-            throw new OptException(OptExceptionCode.OptIsNone);
-        }
-
-        return value;
+        return value ?? throw new OptException(OptExceptionCode.OptIsNone);
     }
 
     /// <summary>
