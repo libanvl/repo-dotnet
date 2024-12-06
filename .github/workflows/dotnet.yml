@@ -15,7 +15,6 @@ concurrency:
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  DOTNET_VERSION: 8.x.x
   GITHUB_FEED: https://nuget.pkg.github.com/libanvl/index.json
   GITHUB_USER: libanvl
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -25,18 +24,18 @@ jobs:
     uses: ./.github/workflows/ci-call.yml
     with:
       runs-on: ubuntu-latest
-      dotnet-version: ${{ env.DOTNET_VERSION }}
+      dotnet-version: 8.x.x
       package: true
   build-windows:
     uses: ./.github/workflows/ci-call.yml
     with:
       runs-on: ubuntu-latest
-      dotnet-version: ${{ env.DOTNET_VERSION }}
+      dotnet-version: 8.x.x
   build-macos:
     uses: ./.github/workflows/ci-call.yml
     with:
       runs-on: ubuntu-latest
-      dotnet-version: ${{ env.DOTNET_VERSION }}}}
+      dotnet-version: 8.x.x
 
   private-release:
     needs: build-ubuntu
