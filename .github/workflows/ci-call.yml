@@ -80,8 +80,11 @@ jobs:
           path: ./nupkg/*
       - name: Upload Code Coverage
         if: ${{ inputs.upload-coverage }}
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: false # optional (default = false)
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true # optional (default = false)
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
