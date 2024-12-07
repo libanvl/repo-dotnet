@@ -1,6 +1,7 @@
 [![.NET 8](https://github.com/libanvl/opt/actions/workflows/dotnet.yml/badge.svg)](https://github.com/libanvl/opt/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/libanvl/opt/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/libanvl/opt/actions/workflows/codeql-analysis.yml)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/libanvl.opt?label=libanvl.opt)](https://www.nuget.org/packages/libanvl.opt/)
+[![codecov](https://codecov.io/gh/libanvl/opt/graph/badge.svg?token=X29VU1I53I)](https://codecov.io/gh/libanvl/opt)
 
 # libanvl.Opt
 
