@@ -27,17 +27,22 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
-    - name: ⚙ Install prerequisites
-      run: ./init.ps1 -UpgradePrerequisites
-
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.x.x
+    - name: Nerdbank.GitVersioning
+      uses: dotnet/nbgv@v0.4.2
+      with:
+        setCommonVars: true
+      id: nbgv
+    - run: dotnet tool update -g docfx
     - run: dotnet docfx docfx/docfx.json
       name: 📚 Generate documentation
-
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
         path: docfx/_site
-
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
