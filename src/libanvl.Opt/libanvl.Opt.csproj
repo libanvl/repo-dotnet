@@ -37,8 +37,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.6.146" />
-  </ItemGroup>
-
 </Project>

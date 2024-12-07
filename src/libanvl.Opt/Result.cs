@@ -1,6 +1,67 @@
 ﻿namespace libanvl;
 
 /// <summary>
+/// Provides static methods for creating and working with <see cref="Result{TResult, TError}"/> instances.
+/// </summary>
+public static class Result
+{
+    /// <summary>
+    /// Creates a new <see cref="Result{TResult, TError}"/> representing a success.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the success value.</typeparam>
+    /// <typeparam name="TError">The type of the error value.</typeparam>
+    /// <param name="value">The success value.</param>
+    /// <returns>A <see cref="Result{TResult, TError}"/> representing a success.</returns>
+    public static Result<TResult, TError> Ok<TResult, TError>(TResult value)
+        where TResult : notnull
+        where TError : notnull => new(value);
+
+    /// <summary>
+    /// Creates a new <see cref="Result{TResult, TError}"/> representing an error.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the success value.</typeparam>
+    /// <typeparam name="TError">The type of the error value.</typeparam>
+    /// <param name="error">The error value.</param>
+    /// <returns>A <see cref="Result{TResult, TError}"/> representing an error.</returns>
+    public static Result<TResult, TError> Err<TResult, TError>(TError error)
+        where TResult : notnull
+        where TError : notnull => new(error);
+
+    /// <summary>
+    /// Creates a new <see cref="Result{TResult, TError}"/> from the specified success and error values.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the success value.</typeparam>
+    /// <typeparam name="TError">The type of the error value.</typeparam>
+    /// <param name="value">The success value.</param>
+    /// <param name="error">The error value.</param>
+    /// <returns>A <see cref="Result{TResult, TError}"/> containing the specified success and error values.</returns>
+    public static Result<TResult, TError> From<TResult, TError>(Opt<TResult> value, Opt<TError> error)
+        where TResult : notnull
+        where TError : notnull
+    {
+        return new(value, error);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Result{TResult, Exception}"/> representing a success.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the success value.</typeparam>
+    /// <param name="value">The success value.</param>
+    /// <returns>A <see cref="Result{TResult, Exception}"/> representing a success.</returns>
+    public static Result<TResult, Exception> Ok<TResult>(TResult value)
+        where TResult : notnull => new(value);
+
+    /// <summary>
+    /// Creates a new <see cref="Result{TResult, Exception}"/> representing an error.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the success value.</typeparam>
+    /// <param name="error">The error value.</param>
+    /// <returns>A <see cref="Result{TResult, Exception}"/> representing an error.</returns>
+    public static Result<TResult, Exception> Err<TResult>(Exception error)
+        where TResult : notnull => new(error);
+}
+
+/// <summary>
 /// Represents a result that can either be a success (Ok) or an error (Err).
 /// </summary>
 /// <typeparam name="TResult">The type of the success value.</typeparam>
@@ -27,6 +88,37 @@ public readonly struct Result<TResult, TError>
     {
         Value = Opt<TResult>.None;
         Error = Opt.Some(error);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Result{TResult, TError}"/> struct with a success value.
+    /// </summary>
+    /// <param name="value">The success value.</param>
+    public Result(Opt<TResult> value)
+    {
+        Value = value;
+        Error = Opt<TError>.None;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Result{TResult, TError}"/> struct with an error value.
+    /// </summary>
+    /// <param name="error">The error value.</param>
+    public Result(Opt<TError> error)
+    {
+        Value = Opt<TResult>.None;
+        Error = error;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Result{TResult, TError}"/> struct with a success value and an error value.
+    /// </summary>
+    /// <param name="value">The success value.</param>
+    /// <param name="error">The error value.</param>
+    public Result(Opt<TResult> value, Opt<TError> error)
+    {
+        Value = value;
+        Error = error;
     }
 
     /// <summary>
@@ -64,8 +156,17 @@ public readonly struct Result<TResult, TError>
     /// Unwraps the success value, if present.
     /// </summary>
     /// <returns>The success value.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if the result is an error.</exception>
-    public TResult Unwrap() => Value.Unwrap();
+    public TResult Unwrap()
+    {
+        if (IsOk)
+            return Value.Unwrap();
+
+        TError error = Error.Unwrap();
+        if (error is Exception exception)
+            throw exception;
+
+        throw new InvalidOperationException(error.ToString());
+    }
 
     /// <summary>
     /// Matches the result, invoking the appropriate action based on whether it is a success or an error.

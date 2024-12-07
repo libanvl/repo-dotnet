@@ -28,6 +28,11 @@ on:
         type: boolean
         default: false
         required: false
+      upload-coverage:
+        description: Whether to upload code coverage
+        type: boolean
+        default: false
+        required: false
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
@@ -55,9 +60,9 @@ jobs:
       - name: Restore
         run: dotnet restore
       - name: Build
-        run: dotnet build --configuration ${{ inputs.configuration }} --no-restore --verbosity ${{ inputs.dotnet-verbosity }} -p:ContinuousIntegrationBuild=true
+        run: dotnet build --configuration ${{ inputs.configuration }} --no-restore --verbosity ${{ inputs.dotnet-verbosity }} /p:ContinuousIntegrationBuild=true
       - name: Test
-        run: dotnet test --configuration ${{ inputs.configuration }} --no-restore --no-build --verbosity ${{ inputs.dotnet-verbosity }}
+        run: dotnet test --configuration ${{ inputs.configuration }} --no-restore --no-build --verbosity ${{ inputs.dotnet-verbosity }} /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
       - name: Print Public Release
         if: ${{ inputs.package }}
         run: echo ${{ steps.nbgv.outputs.PublicRelease }}
@@ -73,3 +78,10 @@ jobs:
         with:
           name: nupkg
           path: ./nupkg/*
+      - name: Upload Code Coverage
+        if: ${{ inputs.upload-coverage }}
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: false # optional (default = false)
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true # optional (default = false)

@@ -1,5 +1,6 @@
 ﻿using libanvl.Exceptions;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace libanvl;
 
@@ -74,6 +75,7 @@ public readonly struct Opt<T> : IEquatable<Opt<T>> where T : notnull
     {
         OptException.ThrowIfNull(value);
         _value = value;
+        IsSome = true;
     }
 
     /// <summary>
@@ -138,7 +140,7 @@ public readonly struct Opt<T> : IEquatable<Opt<T>> where T : notnull
     /// <summary>
     /// Gets a value indicating whether the option has a value.
     /// </summary>
-    public bool IsSome => _value is not null;
+    public bool IsSome { get; }
 
     /// <summary>
     /// Gets a value indicating whether the option does not have a value.

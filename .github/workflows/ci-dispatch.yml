@@ -15,7 +15,7 @@ on:
         type: string
         description: Verbosity of dotnet commands
         required: false
-        default: minimal
+        default: normal
       configuration:
         description: The configuration to build
         default: Release
@@ -27,6 +27,11 @@ on:
         default: false
       workflow-print-context:
         description: Print the github context as a step
+        type: boolean
+        required: false
+        default: false
+      upload-coverage:
+        description: Upload code coverage
         type: boolean
         required: false
         default: false
@@ -47,3 +52,4 @@ jobs:
       dotnet-verbosity: ${{ github.event.inputs.dotnet-verbosity }}
       configuration:  ${{ github.event.inputs.configuration }}
       package: ${{ github.event.inputs.package == 'true' }}
+      upload-coverage: ${{ github.event.inputs.upload-coverage == 'true' }}
