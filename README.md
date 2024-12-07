@@ -6,15 +6,13 @@
 
 A null-free optional value library for .NET.
 
-* An optional value is represented as the base type Opt&lt;T&gt;
-* Present values are represented as the derived type Opt&lt;T&gt;.Some
-* Missing values are represented as the static property Opt&lt;T&gt;.None
+* An optional value is represented as the struct Opt&lt;T&gt;
 
 See the [Examples Tests](test/libanvl.Opt.Test/Examples.cs) for more on how to use Opt.
 
 ## Requirements
 
-[.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0)
+[.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0)
 
 ## Releases
 
@@ -28,13 +26,12 @@ See the [Examples Tests](test/libanvl.Opt.Test/Examples.cs) for more on how to u
 - [X] Immutable
 - [X] Use Opt&lt;T&gt; instead of T? for optional values 
 - [X] Implicit conversion from T to Opt&lt;T&gt;
-- [X] Opts of IEnumerable&lt;T&gt; are iterable
 - [X] Deep selection of properties in complex objects
-- [X] SomeOrEmpty() for string and enumerables
 - [X] SomeOrDefault() for any type
-- [X] Change to a null with SomeOrNull()
 - [X] Explicitly opt-in to exceptions with Unwrap()
-- [X] Cast inner value to compatible type with Cast() 
+- [X] Cast inner value to compatible type with Cast&lt;U&gt;() 
+- [ ] SomeOrEmpty() for string and enumerables
+- [ ] Opts of IEnumerable&lt;T&gt; are iterable
 
 ## Examples
 
@@ -46,9 +43,9 @@ class Car
 
 public void AcceptOptionalValue(Opt<Car> optCar, Opt<string> optName)
 {
-	if (optCar is Opt<Car>.Some someCar)
+	if (optCar.IsSome)
 	{
-		someCar.Value.Driver = optName.SomeOrDefault("Default Driver");
+		optCar.Unwrap().Driver = optName.SomeOr("Default Driver");
 	}
 
 	if (optCar.IsNone)
@@ -67,24 +64,9 @@ public void RunCarOperations()
 	AcceptOptionalValue(acar, "Rick");
 
 	Car? nocar = null;
-	AcceptOptionalValue(nocar.WrapOpt(), None.String)
+	AcceptOptionalValue(Opt.From(nocar), Opt<string>.None)
 
 	// use Select to project to an Opt of an inner property
 	Opt<string> driver = acar.Select(x => x.Driver);
-}
-
-public void OptsOfEnumerablesAreIterable<T>(Opt<List<T>> optList)
-{
-	// if optList is None, the enumerable is empty, not null
-	foreach (T item in optList)
-	{
-		Console.WriteLine(item);
-	}
-
-	// this is equivalent
-	foreach (T item in optList.SomeOrEmpty())
-	{
-		Console.WriteLine(item);
-	}
 }
 ```
