@@ -1,5 +1,11 @@
 name: Docs
 
+permissions:
+  id-token: write
+  contents: read
+  actions: read
+  pages: write
+
 on:
   push:
     branches:
