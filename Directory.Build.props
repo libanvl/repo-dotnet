@@ -21,7 +21,7 @@
 
   <PropertyGroup>
     <GitVersionBaseDirectory>$(MSBuildThisFileDirectory)</GitVersionBaseDirectory>
-    <PackageProjectUrl>https://github.com/libanvl/uuid</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/libanvl/[PLACEHOLDER]</PackageProjectUrl>
     <Company>[COMPANY]</Company>
     <Authors>The contributors of the [PROJECT] project.</Authors>
     <Copyright>© The contributors of the [PROJECT] project. All rights reserved.</Copyright>

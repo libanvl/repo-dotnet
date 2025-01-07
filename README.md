@@ -21,7 +21,7 @@ The default workflows use reusable workflows and composite actions from [libanvl
 2. Fetch the latest changes from the template repository
 3. Merge the main branch from the template, allowing unrelated histories and squashing commits
 4. Carefully review changes, and fix conflicts
-4. Commit the squashed changes
+5. Commit the squashed changes
 
 ```sh
 git remote add template https://github.com/libanvl/repo-dotnet.git
